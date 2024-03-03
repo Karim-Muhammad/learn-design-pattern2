@@ -8,6 +8,6 @@
 
 [Interface Segregation Principle (ISP)](interface_segregation_principle.md)
 
-[Dependency Inversion Principle (DIP)](dependency_inversion_principle.md)
+[Dependency Injection Principle (DIP)](dependency_injection_principle.md)
 
 ---

@@ -141,16 +141,44 @@ class Ostrich extends FlightlessBird {
 
 these not perfect solution, it just example to arise the problem and show how to solve it using simple design.
 
+---
+
 another example to understand the Liskov Substitution Principle. (Our `EmptyGarden` class from the Single Responsibility Principle example)
 
-Example:
+---
+
+**Example:**
 let's consider our `EmptyGarden` was only accepts width and height as **Rectangle Interface**, and it has `items()` method to return the items in the garden.
 
-and it was always calculate the area of the garden by multiplying the width and height, and then return the items.
+```php
+class RectangleArea {
+    public function area() {
+        return $this->width * $this->height;
+    }
+}
 
-this is problem, because `EmptyGarden` is Coupled with `Rectangle` class, and it's not substitutable for `Square` class for example, because `Square` class has only one side, and it's not the same as `Rectangle` class.
+class Rectangle implements RectangleArea {
+    private RectangleArea $area;
 
-so if we want to create `EmptyGarden` object with `Square` class, we will face issues.
+    public function __construct(RectangleArea $area) {
+        $this->area = $area;
+    }
+
+    // implementation of RectangleArea Interface
+    /**
+     * @return float
+     */
+    public function area(): float {
+        return $this->area->area();
+    }
+}
+```
+
+and it was always calculate the area of the garden by multiplying the width and height, and then return the items. (Coupled with `Rectangle` class) (not substitutable for `Triangle` class for example)
+
+this is problem, because `EmptyGarden` is Coupled with `Rectangle` class, and it's not substitutable for `Triangle` class for example, because `Triangle` class has different logic for `area()`, and it's not the same as `Rectangle` class.
+
+so if we want to create `EmptyGarden` object with `Triangle` class, we will face issues.
 
 let's see the code
 
@@ -171,9 +199,9 @@ $garden->items(); // issues here
 // area of the square = side * side
 ```
 
-the problem here is that `EmptyGarden` class is not substitutable for `Rectangle` class, because it's not correct for `Square` and `Triangle` classes.
+the problem here is that `EmptyGarden` class is coupled with `Rectangle` and it is not substitutable for `Triangle` class or `Square`.
 
-good solution here is to make our `EmptyGarden` class to accept `Area` Interface instead of `RectangleArea`, and `Area` Interface has `area()` method to return the area of the garden.
+good solution here is to make our `EmptyGarden` class to accept `Area` Interface instead of `RectangleArea`, and `Area` Interface has `area()` method to return the area of the garden (always same data type).
 and every class that implements `Area` Interface should have `area()` method to return the area of the garden.
 
 ```php
@@ -265,8 +293,34 @@ class Penguin extends Bird {
 }
 ```
 
+Now, we solved the problem, and `EmptyGarden` class is apply `Liskov principle` and `Area` now substutable
+to `Triangle`, `Square`, `Rectangle` and any other class that implements `Area` Interface.
+
+before solution, Garden was always calculate the area of the garden by multiplying the width and height, and then return the items. (Coupled with `Rectangle` class) (not substitutable for `Triangle` class for example)
+
+1. now class just execute `area()` method to get the area of the garden, and it doesn't care about the logic of the area, and it doesn't care about the concrete class that implements `Area` Interface.
+2. data type is always same, and it's float, and it's not different from one class to another.
+3. all subclasses of `Area` Interface have same behavior, and they can be used as a substitute for `Area` Interface.
+
+---
+
+> **Note**: Try to make subclasses of a class or interface to be with same behavior, and they can be used as a substitute for the base class or interface. (IMPORTANT)
+
 > **Note:** The Liskov Substitution Principle is a principle in object-oriented programming that states that objects of a superclass shall be replaceable with objects of its subclasses without breaking the application. That requires the objects of your subclasses to behave in the same way as the objects of your superclass.
 >
 > [src](https://www.baeldung.com/cs/liskov-substitution-principle)
 
 > **Note:** If you saw `new` keyword inside a class to create a concrete object, take care of that! think long.
+
+for example in `Laravel` we use `Model Binding` in Controllers to access directly the model instance, and we can use it as a substitute for the base class `Model` without affecting the behavior of the program.
+
+means `User` Model or `Post` Model can be used as a substitute for `Model` class without affecting the behavior of the program at all.
+
+```php
+ // here we use User  Model as a substitute for Model class (Model Binding)
+public function show(User $user) {
+    return $user;
+}
+```
+
+---
