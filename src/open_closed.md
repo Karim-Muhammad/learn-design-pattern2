@@ -3,7 +3,7 @@ $garden = new App\MarijuanaGarden(10, 10);
 $garden->items();
 ```
 
-you ask me, why we created `MarijuanaGarden` class? why you didn't pass for example string "Marijuana" to `EmptyGarden` class and let it handle the rest? like do if condition to check if the string is "Marijuana" then return the items, else return the default items.
+you ask me, why we created `MarijuanaGarden` class? why you didn't pass for example string "Marijuana" to `EmptyGarden` class and let it handle the rest? like do `if condition` to check if the string is "Marijuana" then return the items **weed**, else return the default items.
 
 the answer is, because we want to follow the open/closed principle, in our case we will modify the `EmptyGarden` class when we want to add new **items**, and our principle here says that the class should be open for extension but closed for modification.
 
